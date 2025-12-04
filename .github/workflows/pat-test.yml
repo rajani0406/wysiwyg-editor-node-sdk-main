@@ -7,7 +7,7 @@ jobs:
   test_dispatch:
     runs-on: ubuntu-latest
     env:
-      DISPATCH: ${{ secrets.DISPATCH }}  # <- set the PAT here
+      dispatch: ${{ secrets.DISPATCH }}  # <- set the PAT here
 
     steps:
       - name: Test dispatch to Craft-Froala-WYSIWYG-A
