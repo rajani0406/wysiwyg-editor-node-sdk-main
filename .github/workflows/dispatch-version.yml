@@ -23,7 +23,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.DISPATCH }}      # <— using your PAT
-          repository: froala/Craft-Froala-WYSIWYG
+          repository: rajani0406/Craft-Froala-WYSIWYG
           event-type: sync-version
           client-payload: |
             {"version": "${{ env.VERSION }}"}
@@ -32,7 +32,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.DISPATCH }}      # <— using your PAT
-          repository: froala/yii2-froala-editor
+          repository: rajani0406/yii2-froala-editor
           event-type: sync-version
           client-payload: |
             {"version": "${{ env.VERSION }}"}
