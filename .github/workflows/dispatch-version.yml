@@ -19,7 +19,7 @@ jobs:
           VERSION="${VERSION#v}"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Dispatch to Craft-Froala-WYSIWYG
+      - name: Dispatch to Craft-Froala-WYSIWYG-A
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.DISPATCH }}      # <— using your PAT
@@ -32,7 +32,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.DISPATCH }}      # <— using your PAT
-          repository: rajani0406/yii2-froala-editor
+          repository: rajani0406/yii2-froala-editor-B
           event-type: sync-version
           client-payload: |
             {"version": "${{ env.VERSION }}"}
