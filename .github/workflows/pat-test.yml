@@ -1,10 +1,7 @@
 name: Test Dispatch PAT
 
 on:
-  release:
-    types: [published]
-  workflow_dispatch:    # ← allows manual trigger
-
+  workflow_dispatch:   # allows manual triggering
 
 jobs:
   test_dispatch:
@@ -12,14 +9,15 @@ jobs:
 
     steps:
       - name: Test dispatch to Craft-Froala-WYSIWYG-A
-        id: test1
         run: |
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: token ${{ secrets.DISPATCH }}" \
             https://api.github.com/repos/rajani0406/Craft-Froala-WYSIWYG-A/dispatches \
             -d '{"event_type":"test-dispatch"}')
+
           echo "HTTP status: $RESPONSE"
+
           if [ "$RESPONSE" -eq 204 ]; then
             echo "✅ Dispatch PAT works for Craft-Froala-WYSIWYG-A"
           else
@@ -28,17 +26,14 @@ jobs:
           fi
 
       - name: Test dispatch to yii2-froala-editor-B
-        id: test2
         run: |
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: token ${{ secrets.DISPATCH }}" \
             https://api.github.com/repos/rajani0406/yii2-froala-editor-B/dispatches \
             -d '{"event_type":"test-dispatch"}')
+
           echo "HTTP status: $RESPONSE"
+
           if [ "$RESPONSE" -eq 204 ]; then
             echo "✅ Dispatch PAT works for yii2-froala-editor-B"
-          else
-            echo "❌ Dispatch PAT failed for yii2-froala-editor-B"
-            exit 1
-          fi
