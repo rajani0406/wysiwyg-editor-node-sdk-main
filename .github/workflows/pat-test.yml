@@ -26,7 +26,7 @@ jobs:
             echo "❌ Dispatch PAT failed for Craft-Froala-WYSIWYG-A"
             exit 1
           fi
-
+ 
       - name: Test dispatch to yii2-froala-editor-B
         run: |
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
