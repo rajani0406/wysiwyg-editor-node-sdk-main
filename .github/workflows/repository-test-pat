@@ -1,7 +1,10 @@
 name: Test Dispatch PAT
 
 on:
-  workflow_dispatch:
+  release:
+    types: [published]
+  workflow_dispatch:    # ← allows manual trigger
+
 
 jobs:
   test_dispatch:
