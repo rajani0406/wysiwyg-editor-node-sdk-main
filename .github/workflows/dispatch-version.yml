@@ -10,6 +10,7 @@ permissions:
 jobs:
   send_version:
     runs-on: ubuntu-latest
+    environment: dispatch
 
     steps:
       - name: Extract version from tag
