@@ -1,9 +1,9 @@
 name: Dispatch Version to Child Repos
 
 on:
-  workflow_dispatch:       # allows manual testing
+  workflow_dispatch:        # allows manual testing
   release:
-    types: [published]    # still triggers on real releases
+    types: [published]      # triggers on real releases
 
 permissions:
   contents: read
@@ -11,17 +11,19 @@ permissions:
 jobs:
   send_version:
     runs-on: ubuntu-latest
-    environment: dispatch   # <- your environment name, injects secrets
+    environment: dispatch    # environment that holds the PAT secret
+    env:
+      PAT: ${{ secrets.PAT }}   # <-- your new secret
 
     steps:
-      # Step 1: Set version for manual testing
+      # Step 1: Set version manually for workflow_dispatch
       - name: Set version for workflow_dispatch
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           echo "VERSION=4.7.1" >> $GITHUB_ENV
 
-      # Step 2: Extract version from release tag
-      - name: Extract version from release
+      # Step 2: Extract version for real releases
+      - name: Extract version from release tag
         if: ${{ github.event_name == 'release' }}
         run: |
           VERSION="${{ github.event.release.tag_name }}"
@@ -31,31 +33,37 @@ jobs:
       # Step 3: Dispatch to Craft-Froala-WYSIWYG-A
       - name: Dispatch to Craft-Froala-WYSIWYG-A
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: token $dispatch" \
+            -H "Authorization: token $PAT" \
             https://api.github.com/repos/rajani0406/Craft-Froala-WYSIWYG-A/dispatches \
-            -d '{"event_type":"sync-version", "client_payload": {"version":"'"${VERSION}"'"}}')
+            -d "{\"event_type\":\"sync-version\", \"client_payload\": {\"version\":\"${VERSION}\"}}")
+
           echo "HTTP status: $RESPONSE"
+
           if [ "$RESPONSE" -eq 204 ]; then
-            echo "✅ Dispatch PAT works for Craft-Froala-WYSIWYG-A"
+            echo "✅ Dispatch to Craft-Froala-WYSIWYG-A succeeded"
           else
-            echo "❌ Dispatch PAT failed for Craft-Froala-WYSIWYG-A"
+            echo "❌ Dispatch to Craft-Froala-WYSIWYG-A failed"
             exit 1
           fi
 
       # Step 4: Dispatch to yii2-froala-editor-B
       - name: Dispatch to yii2-froala-editor-B
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: token $dispatch" \
+            -H "Authorization: token $PAT" \
             https://api.github.com/repos/rajani0406/yii2-froala-editor-B/dispatches \
-            -d '{"event_type":"sync-version", "client_payload": {"version":"'"${VERSION}"'"}}')
+            -d "{\"event_type\":\"sync-version\", \"client_payload\": {\"version\":\"${VERSION}\"}}")
+
           echo "HTTP status: $RESPONSE"
+
           if [ "$RESPONSE" -eq 204 ]; then
-            echo "✅ Dispatch PAT works for yii2-froala-editor-B"
+            echo "✅ Dispatch to yii2-froala-editor-B succeeded"
           else
-            echo "❌ Dispatch PAT failed for yii2-froala-editor-B"
+            echo "❌ Dispatch to yii2-froala-editor-B failed"
             exit 1
           fi
